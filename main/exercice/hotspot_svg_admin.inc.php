@@ -17,6 +17,39 @@ if (!is_object($objQuestion)) {
 <!-- TODO load javascript properly -->
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH) ?>raphael-min.js"></script>
 <script>
+	
+	/*
+	 * TODO : 
+	 * 1. parent object geometry + objects polygon and circles inherits geometry
+	 * with following methods :
+	 *   - constructor
+	 *   - handleClick
+	 *   - clear
+	 *   - draw
+	 * and following attributes :
+	 *   - path (for polygon)
+	 *   - ellipse (for ellipse)
+	 *   - points
+	 *   - color
+	 *   
+	 * 2. object hotspot
+	 * with following methods :
+	 *   - constructor
+	 * and following attributes
+	 *   - id
+	 *   - geometry
+	 *   - color
+	 *   
+	 * 3. object hotspotcollection
+	 * with following method :
+	 *   - constructor
+	 *   - add
+	 *   - remove
+	 *   - find
+	 */
+	
+	
+	
 	$(document).ready(function(){
 		
 		var hotspots_colors = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
