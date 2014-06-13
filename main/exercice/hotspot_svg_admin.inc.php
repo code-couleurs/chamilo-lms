@@ -19,7 +19,9 @@ if (!is_object($objQuestion)) {
 <script>
 	$(document).ready(function(){
 		
-		var polygons = new Array();
+		var polygons_colors = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
+		var inc_hotspots = 0;
+		var polygons = {};
 		var current_polygon;
 		var dragging = false;
 		var paper = Raphael('paper', 1000, 800);
@@ -35,33 +37,21 @@ if (!is_object($objQuestion)) {
 			}
 		});
 		
-		$('#paper').dblclick(function(e){
-			if(current_polygon)
-			{
-				draw_polygon(current_polygon, true);
-				current_polygon = false;
-			}
-		});
-		
 		function add_point(x, y)
 		{
 			if(!current_polygon)
 			{
-				current_polygon = {
-					path: false,
-					points: []
-				};
-				polygons.push(current_polygon);
+				return false;
 			}
 			var point = paper.circle(x,y,5).attr({
-				fill: "green",
+				fill: current_polygon.color,
 				cursor: "move",
 				"stroke-width": 20,
 				stroke: "transparent"
 			});
 			paper.set(point).drag(move, start, up);
 			current_polygon.points.push(point);
-			draw_polygon(current_polygon);			
+			draw_polygon(current_polygon, true);			
 		}
 		
 		function draw_polygon(polygon, finish)
@@ -73,19 +63,19 @@ if (!is_object($objQuestion)) {
 			if(polygon.points.length > 1)
 			{
 				var polygon_str = 'M ';
-				for(var i in current_polygon.points)
+				for(var i in polygon.points)
 				{
 					polygon_str += ' '+polygon.points[i].attr('cx')+' '+polygon.points[i].attr('cy');
-					if(i != current_polygon.points.length-1)
+					if(i != polygon.points.length-1)
 					{
-						current_polygon.points[i].attr('r', '3');
+						polygon.points[i].attr('r', '3');
 					}
 				}
 				if(finish)
 				{
 					polygon_str += 'Z'; 
 				}
-				polygon.path = paper.path(polygon_str).attr('fill', 'red').attr('opacity', 0.6);
+				polygon.path = paper.path(polygon_str).attr('fill', current_polygon.color).attr('opacity', 0.6);
 			}
 		}
 		
@@ -114,7 +104,70 @@ if (!is_object($objQuestion)) {
 			this.ox = this.attr("cx");
 			this.oy = this.attr("cy");
 		}
+		
+		function add_hotspot(){
+			var li = $('<li>');
+			li.attr('id', 'hotspot_'+inc_hotspots);
+			li.text('Hotspot '+inc_hotspots);
+			$('#hotspots').append(li);
+			li.click(function(){
+				select_hotspot($(this));
+			});
+			
+			li.css('color', polygons_colors[li.index()]);
+			polygons['hotspot_'+inc_hotspots] = {
+				path: false,
+				points: [],
+				color: li.css('color')
+			};
+			select_hotspot(li);
+			inc_hotspots++;
+		}
+		
+		function select_hotspot(li){
+			$('#hotspots li').removeClass('active');
+			li.addClass('active');
+			current_polygon = polygons[li.attr('id')];
+		}
+		
+		function clear_current_hotspot(){
+			if(!current_polygon)
+				return false;
+			
+			for(var i in current_polygon.points)
+			{
+				current_polygon.points[i].remove();
+			}
+			
+			current_polygon.points = [];
+			draw_polygon(current_polygon, true);
+		}
+		
+		
+		$('.add_hotspot').click(add_hotspot);
+		$('.clear_hotspot').click(clear_current_hotspot);
 	});
 </script>
 
-<div id="paper" style="background: url(<?php echo api_get_path(WEB_COURSE_PATH).api_get_course_path().'/document/images/'.$objQuestion->picture; ?>); width:545px; height: 306px;"></div>
+<style>
+	#hotspots li, a {
+		cursor: pointer;
+	}
+	#hotspots li.active {
+		font-weight: bold;
+	}
+	#draw_menu li {
+		float: left;
+	}
+</style>
+
+<a class="add_hotspot">Add hotspot</a>
+<ul id="hotspots">
+</ul>
+
+Tools :
+<ul id="draw_menu">
+	<li class="clear_hotspot"><a>Clear hotspot</a></li>
+</ul>
+<div class="clear"></div>
+<div id="paper" style="background: url(<?php echo api_get_path(WEB_COURSE_PATH).api_get_course_path().'/document/images/'.$objQuestion->picture; ?>); width:1000px; height: 1000px; background-repeat: no-repeat"></div>

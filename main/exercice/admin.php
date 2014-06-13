@@ -560,7 +560,7 @@ if (isset($_GET['hotspotadmin'])) {
     if (!$objQuestion) {
         api_not_allowed();
     }
-    require 'hotspot_admin.inc.php';
+    require 'hotspot_svg_admin.inc.php';
 }
 
 if (!$newQuestion && !$modifyQuestion && !$editQuestion && !isset($_GET['hotspotadmin'])) {

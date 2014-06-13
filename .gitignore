@@ -44,3 +44,6 @@ tests/doctrine_console/Proxies
 # OS stuff
 .DS_Store
 /.htaccess
+/Gruntfile.js
+/package.json
+/node_modules/
