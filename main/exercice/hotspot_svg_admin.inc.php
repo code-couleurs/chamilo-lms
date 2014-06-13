@@ -33,11 +33,12 @@ if (!is_object($objQuestion)) {
 				var relX = e.pageX - parentOffset.left;
 				var relY = e.pageY - parentOffset.top;
 
-				add_polygon_point(relX, relY);
+				
+				add_point(relX, relY);
 			}
 		});
 		
-		function add_polygon_point(x, y)
+		function add_point(x, y)
 		{
 			if(!current_hotspot)
 			{
@@ -51,7 +52,34 @@ if (!is_object($objQuestion)) {
 			});
 			paper.set(point).drag(move, start, up);
 			current_hotspot.geometry.points.push(point);
-			draw_polygon(current_hotspot.geometry);			
+			if(current_hotspot.type == 'polygon')
+			{
+				draw_polygon(current_hotspot.geometry);		
+			}
+			else if(current_hotspot.type == 'ellipse')
+			{
+				draw_ellipse(current_hotspot);
+			}
+		}
+		
+		function draw_ellipse(hotspot)
+		{
+			if(hotspot.geometry.points.length < 2)
+				return false;
+			if(hotspot.geometry.ellipse)
+			{
+				hotspot.geometry.ellipse.remove();
+			}
+			console.log(hotspot.geometry.points[0]);
+			var x1 = hotspot.geometry.points[0].attr('cx');
+			var y1 = hotspot.geometry.points[0].attr('cy');
+			var x2 = Math.abs(hotspot.geometry.points[1].attr('cx')-x1);
+			var y2 = Math.abs(hotspot.geometry.points[1].attr('cy')-y1);
+			hotspot.geometry.ellipse = paper.ellipse(x1,y1,x2,y2).attr({
+				fill: hotspot.color,
+				opacity: 0.6
+			});
+			
 		}
 		
 		function draw_polygon(polygon)
@@ -79,13 +107,16 @@ if (!is_object($objQuestion)) {
 		function move (dx, dy) {
 			dragging = true;
 			this.attr({cx: this.ox + dx, cy: this.oy + dy});
-			for(var i in current_hotspot)
+			for(var i in hotspots)
 			{
-				for(var j in current_hotspot[i].geometry.points)
+				for(var j in hotspots[i].geometry.points)
 				{
-					if(current_hotspot[i].geometry.points[j] == this)
+					if(hotspots[i].geometry.points[j] == this)
 					{
-						draw_polygon(current_hotspot[i].geometry);
+						if(hotspots[i].type == 'polygon')
+							draw_polygon(hotspots[i].geometry);
+						else if(hotspots[i].type == 'ellipse')
+							draw_ellipse(hotspots[i]);
 						return;
 					}
 				}
@@ -122,6 +153,22 @@ if (!is_object($objQuestion)) {
 			};
 			select_hotspot(li);
 			inc_hotspots++;
+			
+			var select = $('<select>');
+			select.addClass('choose_geometry');
+			select.append('<option value="polygon" selected="selected">Polygon</option>');
+			select.append('<option value="ellipse">Ellipse</option>');
+			select.change(change_geometry);
+			li.append(select);
+			
+		}
+		
+		function change_geometry()
+		{
+			var select = $(this);
+			var li = select.parents('li').first();
+			hotspots[li.attr('id')].type = select.val();
+			clear_hotspot(hotspots[li.attr('id')]);
 		}
 		
 		function select_hotspot(li){
@@ -133,14 +180,22 @@ if (!is_object($objQuestion)) {
 		function clear_current_hotspot(){
 			if(!current_hotspot)
 				return false;
+			clear_hotspot(current_hotspot);
 			
-			for(var i in current_hotspot.geometry.points)
+		}
+		
+		function clear_hotspot(hotspot)
+		{
+			for(var i in hotspot.geometry.points)
 			{
-				current_hotspot.geometry.points[i].remove();
+				hotspot.geometry.points[i].remove();
 			}
 			
-			current_hotspot.geometry.points = [];
-			draw_polygon(current_hotspot.geometry);
+			hotspot.geometry.points = [];
+			if(hotspot.geometry.path)
+				hotspot.geometry.path.remove();
+			if(hotspot.geometry.ellipse)
+				hotspot.geometry.ellipse.remove();
 		}
 		
 		
