@@ -19,10 +19,10 @@ if (!is_object($objQuestion)) {
 <script>
 	$(document).ready(function(){
 		
-		var polygons_colors = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
+		var hotspots_colors = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
 		var inc_hotspots = 0;
-		var polygons = {};
-		var current_polygon;
+		var hotspots = {};
+		var current_hotspot;
 		var dragging = false;
 		var paper = Raphael('paper', 1000, 800);
 		
@@ -33,28 +33,28 @@ if (!is_object($objQuestion)) {
 				var relX = e.pageX - parentOffset.left;
 				var relY = e.pageY - parentOffset.top;
 
-				add_point(relX, relY);
+				add_polygon_point(relX, relY);
 			}
 		});
 		
-		function add_point(x, y)
+		function add_polygon_point(x, y)
 		{
-			if(!current_polygon)
+			if(!current_hotspot)
 			{
 				return false;
 			}
 			var point = paper.circle(x,y,5).attr({
-				fill: current_polygon.color,
+				fill: current_hotspot.color,
 				cursor: "move",
 				"stroke-width": 20,
 				stroke: "transparent"
 			});
 			paper.set(point).drag(move, start, up);
-			current_polygon.points.push(point);
-			draw_polygon(current_polygon, true);			
+			current_hotspot.geometry.points.push(point);
+			draw_polygon(current_hotspot.geometry);			
 		}
 		
-		function draw_polygon(polygon, finish)
+		function draw_polygon(polygon)
 		{
 			if(polygon.path)
 			{
@@ -71,24 +71,21 @@ if (!is_object($objQuestion)) {
 						polygon.points[i].attr('r', '3');
 					}
 				}
-				if(finish)
-				{
-					polygon_str += 'Z'; 
-				}
-				polygon.path = paper.path(polygon_str).attr('fill', current_polygon.color).attr('opacity', 0.6);
+				polygon_str += 'Z'; 
+				polygon.path = paper.path(polygon_str).attr('fill', current_hotspot.color).attr('opacity', 0.6);
 			}
 		}
 		
 		function move (dx, dy) {
 			dragging = true;
 			this.attr({cx: this.ox + dx, cy: this.oy + dy});
-			for(var i in polygons)
+			for(var i in current_hotspot)
 			{
-				for(var j in polygons[i].points)
+				for(var j in current_hotspot[i].geometry.points)
 				{
-					if(polygons[i].points[j] == this)
+					if(current_hotspot[i].geometry.points[j] == this)
 					{
-						draw_polygon(polygons[i]);
+						draw_polygon(current_hotspot[i].geometry);
 						return;
 					}
 				}
@@ -114,10 +111,13 @@ if (!is_object($objQuestion)) {
 				select_hotspot($(this));
 			});
 			
-			li.css('color', polygons_colors[li.index()]);
-			polygons['hotspot_'+inc_hotspots] = {
-				path: false,
-				points: [],
+			li.css('color', hotspots_colors[li.index()]);
+			hotspots['hotspot_'+inc_hotspots] = {
+				type: 'polygon',
+				geometry: {
+					path: false,
+					points: []
+				},
 				color: li.css('color')
 			};
 			select_hotspot(li);
@@ -127,20 +127,20 @@ if (!is_object($objQuestion)) {
 		function select_hotspot(li){
 			$('#hotspots li').removeClass('active');
 			li.addClass('active');
-			current_polygon = polygons[li.attr('id')];
+			current_hotspot = hotspots[li.attr('id')];
 		}
 		
 		function clear_current_hotspot(){
-			if(!current_polygon)
+			if(!current_hotspot)
 				return false;
 			
-			for(var i in current_polygon.points)
+			for(var i in current_hotspot.geometry.points)
 			{
-				current_polygon.points[i].remove();
+				current_hotspot.geometry.points[i].remove();
 			}
 			
-			current_polygon.points = [];
-			draw_polygon(current_polygon, true);
+			current_hotspot.geometry.points = [];
+			draw_polygon(current_hotspot.geometry);
 		}
 		
 		
