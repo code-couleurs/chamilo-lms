@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-	var hotspots_colors = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
 	var hotspots = new ChamiloHostpotCollection();
 	var current_hotspot;
 	var paper = Raphael('paper', 1000, 800);
