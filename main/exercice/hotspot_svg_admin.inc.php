@@ -27,24 +27,61 @@ if (!is_object($objQuestion)) {
 
 <!-- Temporary drafts styles for dev -->
 <style>
-	#hotspots li, a {
+	#hotspots tr, a {
 		cursor: pointer;
-	}
-	#hotspots li.active {
-		font-weight: bold;
 	}
 	#draw_menu li {
 		float: left;
 	}
+	a.hotspot-selector {
+		width: 15px;
+		height: 15px;
+		display: block;
+	}
+	#hotspots tr.active a.hotspot-selector {
+		width: 20px;
+		height: 20px;
+	}
 </style>
 
 <a class="add_hotspot">Add hotspot</a>
-<ul id="hotspots">
-</ul>
+<table id="hotspots">
+	<tr>
+		<th></th>
+		<th><?php echo get_lang('Hotspot') ?></th>
+		<th><?php echo get_lang('Comment') ?></th>
+		<th><?php echo get_lang('QuestionWeighting') ?></th>
+	</tr>
+</table>
 
 Tools :
 <ul id="draw_menu">
 	<li class="clear_hotspot"><a>Clear hotspot</a></li>
+	<li class="geometry-type">
+		<select class="choose_geometry">
+			<option value="polygon">Polygone</option>
+			<option value="ellipse">Ellipse</option>
+			<option value="rectangle">Rectangle</option>
+		</select>
+	</li>
 </ul>
 <div class="clear"></div>
 <div id="paper" style="background: url(<?php echo api_get_path(WEB_COURSE_PATH).api_get_course_path().'/document/images/'.$objQuestion->picture; ?>); width:1000px; height: 1000px; background-repeat: no-repeat"></div>
+
+
+<script type="text/template" id="tpl_form_hotspot_row">
+	<tr id="{hotspot_id}" class="hotspot">
+		<td>
+			<a class="hotspot-selector" style="background-color:{hotspot_color}"></a>
+		</td>
+		<td class="hotspot-title">
+			<input type="text" name="reponse[{hotspot_inc}]" size="45" />
+		</td>
+		<td class="hotspot-comment">
+			<textarea name="comment"></textarea>
+		</td>
+		<td class="hotspot-score">
+			<input type="text" name="weighting[{hotspot_inc}]" value="10.00">
+		</td>
+	</tr>
+</script>

@@ -15,54 +15,46 @@ $(document).ready(function() {
 
 	function add_hotspot() {
 
-		var inc = $('#hotspots li').length;
+		var inc = $('#hotspots .hotspot').length;
 		var hotspot = new ChamiloHotspot('hotspot_' + inc, new ChamiloPolygon(paper, hotspots_colors[inc]));
 
-		var li = $('<li>');
-		li.attr('id', hotspot.id);
-		li.text('Hotspot ' + inc);
-		li.css('color', hotspot.geometry.color);
-		$('#hotspots').append(li);
-		li.click(function() {
-			select_hotspot($(this));
+		var hotspot_html = $('#tpl_form_hotspot_row').html();
+		hotspot_html = hotspot_html.replace(/\{hotspot_id\}/g, hotspot.id);
+		hotspot_html = hotspot_html.replace(/\{hotspot_inc\}/g, inc);
+		hotspot_html = hotspot_html.replace(/\{hotspot_color\}/g, hotspot.geometry.color);console.log(hotspot_html);
+		
+		var hotspot_dom_element = $(hotspot_html);
+		hotspot_dom_element.find('.hotspot-selector').click(function() {
+			select_hotspot(hotspot_dom_element);
 		});
+		$('#hotspots').append(hotspot_dom_element);
 		hotspots.add(hotspot);
-		select_hotspot(li);
-
-		var select = $('<select>');
-		select.addClass('choose_geometry');
-		select.append('<option value="polygon" selected="selected">Polygon</option>');
-		select.append('<option value="ellipse">Ellipse</option>');
-		select.append('<option value="rectangle">Rectangle</option>');
-		select.change(change_geometry);
-		li.append(select);
-
+		select_hotspot(hotspot_dom_element);
 	}
 
 	function change_geometry()
 	{
-		var select = $(this);
-		var li = select.parents('li').first();
-		var hotspot = hotspots.find(li.attr('id'));
-		hotspot.geometry.clear();
-		switch (select.val())
+		if(!current_hotspot)
+			return;
+		current_hotspot.geometry.clear();
+		switch ($(this).val())
 		{
 			case 'polygon':
-				hotspot.geometry = new ChamiloPolygon(paper, hotspot.geometry.color);
+				current_hotspot.geometry = new ChamiloPolygon(paper, current_hotspot.geometry.color);
 				break;
 			case 'ellipse':
-				hotspot.geometry = new ChamiloEllipse(paper, hotspot.geometry.color);
+				current_hotspot.geometry = new ChamiloEllipse(paper, current_hotspot.geometry.color);
 				break;
 			case 'rectangle':
-				hotspot.geometry = new ChamiloRectangle(paper, hotspot.geometry.color);
+				current_hotspot.geometry = new ChamiloRectangle(paper, current_hotspot.geometry.color);
 				break;
 		}
 	}
 
-	function select_hotspot(li) {
-		$('#hotspots li').removeClass('active');
-		li.addClass('active');
-		current_hotspot = hotspots.find(li.attr('id'));
+	function select_hotspot(dom_element) {
+		$('#hotspots .hotspot').removeClass('active');
+		dom_element.addClass('active');
+		current_hotspot = hotspots.find(dom_element.attr('id'));
 	}
 
 	function clear_current_hotspot() {
@@ -75,4 +67,5 @@ $(document).ready(function() {
 
 	$('.add_hotspot').click(add_hotspot);
 	$('.clear_hotspot').click(clear_current_hotspot);
+	$('.choose_geometry').click(change_geometry);
 });
