@@ -34,6 +34,7 @@ $(document).ready(function() {
 		select.addClass('choose_geometry');
 		select.append('<option value="polygon" selected="selected">Polygon</option>');
 		select.append('<option value="ellipse">Ellipse</option>');
+		select.append('<option value="rectangle">Rectangle</option>');
 		select.change(change_geometry);
 		li.append(select);
 
@@ -52,6 +53,9 @@ $(document).ready(function() {
 				break;
 			case 'ellipse':
 				hotspot.geometry = new ChamiloEllipse(paper, hotspot.geometry.color);
+				break;
+			case 'rectangle':
+				hotspot.geometry = new ChamiloRectangle(paper, hotspot.geometry.color);
 				break;
 		}
 	}

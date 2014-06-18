@@ -19,6 +19,7 @@ if (!is_object($objQuestion)) {
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/geometry.js"></script>
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/polygon.js"></script>
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/ellipse.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/rectangle.js"></script>
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/hotspot.js"></script>
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/hotspotcollection.js"></script>
 <script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/admin.js"></script>
