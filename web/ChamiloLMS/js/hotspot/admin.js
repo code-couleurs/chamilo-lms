@@ -21,15 +21,43 @@ $(document).ready(function() {
 		var hotspot_html = $('#tpl_form_hotspot_row').html();
 		hotspot_html = hotspot_html.replace(/\{hotspot_id\}/g, hotspot.id);
 		hotspot_html = hotspot_html.replace(/\{hotspot_inc\}/g, inc);
-		hotspot_html = hotspot_html.replace(/\{hotspot_color\}/g, hotspot.geometry.color);console.log(hotspot_html);
+		hotspot_html = hotspot_html.replace(/\{hotspot_color\}/g, hotspot.geometry.color);
 		
 		var hotspot_dom_element = $(hotspot_html);
 		hotspot_dom_element.find('.hotspot-selector').click(function() {
 			select_hotspot(hotspot_dom_element);
 		});
+		hotspot_dom_element.find('.hotspot-delete').click(function() {
+			delete_hotspot(hotspot_dom_element);
+		});
 		$('#hotspots').append(hotspot_dom_element);
 		hotspots.add(hotspot);
 		select_hotspot(hotspot_dom_element);
+	}
+
+	function select_hotspot(dom_element) {
+		$('#hotspots .hotspot').removeClass('active');
+		dom_element.addClass('active');
+		current_hotspot = hotspots.find(dom_element.attr('id'));
+	}
+	
+	function delete_hotspot(dom_element) {
+		var hotspot = hotspots.find(dom_element.attr('id'));
+		hotspot.geometry.clear();
+		dom_element.remove();
+		if(hotspot == current_hotspot)
+		{
+			current_hotspot = null;
+		}
+		hotspots.remove(dom_element.attr('id'));
+		recolor();
+	}
+
+	function clear_current_hotspot() {
+		if (!current_hotspot)
+			return false;
+		current_hotspot.geometry.clear();
+
 	}
 
 	function change_geometry()
@@ -50,18 +78,18 @@ $(document).ready(function() {
 				break;
 		}
 	}
-
-	function select_hotspot(dom_element) {
-		$('#hotspots .hotspot').removeClass('active');
-		dom_element.addClass('active');
-		current_hotspot = hotspots.find(dom_element.attr('id'));
-	}
-
-	function clear_current_hotspot() {
-		if (!current_hotspot)
-			return false;
-		current_hotspot.geometry.clear();
-
+	
+	function recolor()
+	{
+		$('#hotspots .hotspot').each(function(){
+			var hotspot = hotspots.find($(this).attr('id'));
+			var color = hotspots_colors[$(this).index()-1];
+			if(hotspot.geometry.color != color)
+			{
+				hotspot.geometry.setColor(color);
+				$(this).find('.hotspot-selector').css('background-color', color);
+			}
+		});
 	}
 
 

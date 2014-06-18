@@ -83,5 +83,8 @@ Tools :
 		<td class="hotspot-score">
 			<input type="text" name="weighting[{hotspot_inc}]" value="10.00">
 		</td>
+		<td class="hotspot-actions">
+			<a class="hotspot-delete"><?php echo Display::display_icon('delete.png') ?></a>
+		</td>
 	</tr>
 </script>

@@ -43,6 +43,13 @@ ChamiloGeometry.prototype = {
 	handleStartDraggingPoint: function(point) {
 		point.ox = point.attr("cx");
 		point.oy = point.attr("cy");
+	},
+	setColor: function(color) {
+		this.color = color;
+		for(var i in this.points){
+			this.points[i].attr('fill', color);
+		}
+		this.draw();
 	}
 	
 };
