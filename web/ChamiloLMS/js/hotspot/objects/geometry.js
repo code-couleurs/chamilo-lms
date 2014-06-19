@@ -50,6 +50,14 @@ ChamiloGeometry.prototype = {
 			this.points[i].attr('fill', color);
 		}
 		this.draw();
+	},
+	export: function() {
+		var ret = '';
+		for(var i in this.points)
+		{
+			ret += this.points[i].attr('cx')+';'+this.points[i].attr('cy')+'|';
+		}
+		return ret;
 	}
 	
 };

@@ -55,7 +55,20 @@ ChamiloPolygon.prototype.draw = function(){
  **** constructor ****
  *******************/
 
-function ChamiloPolygon(paper, color){
+function ChamiloPolygon(paper, color, coordinates){
 	ChamiloGeometry.call(this, paper, color);
+	
+	if(coordinates)
+	{
+		var points_to_draw = coordinates.split('|');
+		for(var i in points_to_draw)
+		{
+			if(!points_to_draw[i])
+				continue;
+			var point_coords = points_to_draw[i].split(';');
+			this.addPoint(point_coords[0], point_coords[1]);
+		}
+		this.draw();
+	}
 }
 
