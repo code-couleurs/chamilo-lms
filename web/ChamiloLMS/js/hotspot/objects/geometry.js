@@ -1,6 +1,7 @@
 ChamiloGeometry.prototype = {
 	
 	dragging : false,
+	type: false, // should be implemented by child
 	
 	draw: function(){
 		// implemented by childs
@@ -52,14 +53,26 @@ ChamiloGeometry.prototype = {
 		this.draw();
 	},
 	export: function() {
-		var ret = '';
-		for(var i in this.points)
-		{
-			ret += this.points[i].attr('cx')+';'+this.points[i].attr('cy')+'|';
-		}
-		return ret;
+		return false; // should be implemented by child
 	}
 	
+};
+
+ChamiloGeometry.forge = function(paper, color, coordinates, type) {
+	switch (type)
+	{
+		case 'circle':
+			return new ChamiloEllipse(paper, color, coordinates);
+			break;
+		case 'square':
+			return new ChamiloRectangle(paper, color, coordinates);
+			break;
+		case 'poly':
+		default: 
+			return new ChamiloPolygon(paper, color, coordinates);
+			break;
+	}
+	return false;
 };
 
 function ChamiloGeometry(paper, color){

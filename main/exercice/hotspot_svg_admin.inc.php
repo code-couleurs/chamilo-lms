@@ -17,10 +17,8 @@ if (!is_object($objQuestion)) {
     $objQuestion = Question :: read($modifyAnswers);
 }
 // construction of the Answer object
-if (!is_object($objAnswer)) {
-	$objAnswer = new Answer($objQuestion->id);
-	Session::write('objAnswer', $objAnswer);
-}
+$objAnswer = new Answer($objQuestion->id);
+Session::write('objAnswer', $objAnswer);
 
 // if we come from the warning box "this question is used in serveral exercises"
 if ($modifyIn) {
@@ -72,7 +70,7 @@ if (!empty($_POST['formSent'])) {
 	$comments = $_POST['comments'];
 	$weightings = $_POST['weightings'];
 	$hotspot_coordinates = $_POST['hotspot_coordinates'];
-	print_r($hotspot_coordinates);
+	$hotspot_types = $_POST['hotspot_types'];
 	for ($i = 1; $i <= count($answers); $i++) {
 		
 		// checks if field is empty
@@ -106,12 +104,12 @@ if (!empty($_POST['formSent'])) {
                 }
                 $answers[$i] = trim($answers[$i]);
                 $comments[$i] = trim($comments[$i]);
-                $weightings[$i] = ($weightings[$i]); //it can be float
+				$hotspot_types[$i] = trim($hotspot_types[$i]);
                 if ($weightings[$i]) {
                     $questionWeighting+=$weightings[$i];
                 }
                 // creates answer
-                $objAnswer->createAnswer($answers[$i], '', $comments[$i], $weightings[$i], $i, $hotspot_coordinates[$i], $hotspot_type[$i]);
+                $objAnswer->createAnswer($answers[$i], '', $comments[$i], $weightings[$i], $i, $hotspot_coordinates[$i], $hotspot_types[$i]);
             }  // end for()
             // saves the answers into the data base
             $objAnswer->save();
@@ -119,6 +117,17 @@ if (!empty($_POST['formSent'])) {
             // sets the total weighting of the question
             $objQuestion->updateWeighting($questionWeighting);
             $objQuestion->save($exerciseId);
+	}
+}
+else { // form has not been submitted, get answers in db
+	$i = 0;
+	$answers = $comments = $weightings = $hotspot_coordinates = $hotspot_types = array();
+	foreach ($objAnswer->answer as $answer_id =>  $answer_item) {
+		$answers[++$i] = $objAnswer->selectAnswer($answer_id);
+		$weightings[$i] = $objAnswer->selectWeighting($answer_id);
+		$comments[$i] = $objAnswer->selectComment($answer_id);
+		$hotspot_coordinates[$i] = $objAnswer->selectHotspotCoordinates($answer_id);
+		$hotspot_types[$i] = $objAnswer->selectHotspotType($answer_id);
 	}
 }
 
@@ -163,9 +172,10 @@ if (!empty($_POST['formSent'])) {
 <script type="text/javascript">
 $(document).ready(function(){
 	var hotspot_admin = new ChamiloHotspotAdmin();
+	
 	<?php if(!empty($answers) && count($answers)>0): ?>
 	<?php foreach($answers as $i=>$answer): ?>
-		hotspot_admin.add_hotspot('<?php echo Security::remove_XSS($answer) ?>','<?php echo Security::remove_XSS($comments[$i]) ?>', '<?php echo Security::remove_XSS($weightings[$i]) ?>', '<?php echo Security::remove_XSS($hotspot_coordinates[$i]) ?>');
+	hotspot_admin.add_hotspot('<?php echo Security::remove_XSS($answer) ?>','<?php echo Security::remove_XSS($comments[$i]) ?>', '<?php echo Security::remove_XSS($weightings[$i]) ?>', '<?php echo Security::remove_XSS($hotspot_coordinates[$i]) ?>', '<?php echo Security::remove_XSS($hotspot_types[$i]) ?>');
 	<?php endforeach; ?>
 	<?php endif; ?>
 });
@@ -192,9 +202,9 @@ $(document).ready(function(){
 		<li class="clear_hotspot"><a>Clear hotspot</a></li>
 		<li class="geometry-type">
 			<select class="choose_geometry">
-				<option value="polygon">Polygone</option>
-				<option value="ellipse">Ellipse</option>
-				<option value="rectangle">Rectangle</option>
+				<option value="poly">Polygone</option>
+				<option value="circle">Ellipse</option>
+				<option value="square">Rectangle</option>
 			</select>
 		</li>
 	</ul>
@@ -221,5 +231,6 @@ $(document).ready(function(){
 			<a class="hotspot-delete"><?php echo Display::display_icon('delete.png') ?></a>
 		</td>
 		<input type="hidden" class="hotspot_coordinates" name="hotspot_coordinates[{hotspot_inc}]" value="">
+		<input type="hidden" class="hotspot_types" name="hotspot_types[{hotspot_inc}]" value="">
 	</tr>
 </script>

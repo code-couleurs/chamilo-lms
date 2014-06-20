@@ -6,7 +6,7 @@ ChamiloPolygon.prototype.constructor = ChamiloPolygon;
  **** properties ****
  ********************/
 
-
+ChamiloPolygon.prototype.type = 'poly';
 
 /*******************
  **** functions ****
@@ -48,6 +48,15 @@ ChamiloPolygon.prototype.draw = function(){
 		self.path = self.paper.path(polygon_str).attr('fill', self.color).attr('opacity', 0.6);
 	}
 	
+};
+
+ChamiloPolygon.prototype.export = function() {
+	var ret = '';
+	for(var i in this.points)
+	{
+		ret += this.points[i].attr('cx')+';'+this.points[i].attr('cy')+'|';
+	}
+	return ret;
 };
 
 

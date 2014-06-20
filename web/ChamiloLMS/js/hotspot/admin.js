@@ -6,10 +6,12 @@ function ChamiloHotspotAdmin() {
 	this.current_hotspot = false;
 	this.paper = Raphael('paper', 1000, 800);
 
-	this.add_hotspot = function(answer, comment, weighting, coordinates) {
+	this.add_hotspot = function(answer, comment, weighting, coordinates, type) {
 
+		if(!type)
+			type = 'poly';
 		var inc = $('#hotspots .hotspot').length+1;
-		var hotspot = new ChamiloHotspot('hotspot_' + inc, new ChamiloPolygon(this.paper, hotspots_colors[inc], coordinates));
+		var hotspot = new ChamiloHotspot('hotspot_' + inc, ChamiloGeometry.forge(this.paper, hotspots_colors[inc], coordinates, type));
 
 		var hotspot_html = $('#tpl_form_hotspot_row').html();
 		hotspot_html = hotspot_html.replace(/\{hotspot_id\}/g, hotspot.id);
@@ -34,7 +36,12 @@ function ChamiloHotspotAdmin() {
 	this.select_hotspot = function(dom_element) {
 		$('#hotspots .hotspot').removeClass('active');
 		dom_element.addClass('active');
-		this.current_hotspot = this.hotspots.find(dom_element.attr('id'));
+		this.current_hotspot = false;
+		var new_hotspot = this.hotspots.find(dom_element.attr('id'));
+		console.log(new_hotspot.geometry.type);
+		$('.choose_geometry').val(new_hotspot.geometry.type);
+		this.current_hotspot = new_hotspot;
+		
 	};
 	
 	this.delete_hotspot = function(dom_element) {
@@ -56,23 +63,14 @@ function ChamiloHotspotAdmin() {
 
 	};
 
-	this.change_geometry = function()
+	this.change_geometry = function(new_geometry_type)
 	{
+		console.log(new_geometry_type);
 		if(!this.current_hotspot)
 			return;
 		this.current_hotspot.geometry.clear();
-		switch ($(this).val())
-		{
-			case 'polygon':
-				this.current_hotspot.geometry = new ChamiloPolygon(this.paper, this.current_hotspot.geometry.color);
-				break;
-			case 'ellipse':
-				this.current_hotspot.geometry = new ChamiloEllipse(this.paper, this.current_hotspot.geometry.color);
-				break;
-			case 'rectangle':
-				this.current_hotspot.geometry = new ChamiloRectangle(this.paper, this.current_hotspot.geometry.color);
-				break;
-		}
+		this.current_hotspot.geometry = ChamiloGeometry.forge(this.paper, this.current_hotspot.geometry.color, '', new_geometry_type);
+		
 	};
 	
 	this.recolor = function()
@@ -88,10 +86,11 @@ function ChamiloHotspotAdmin() {
 		});
 	};
 	
-	this.fill_coordinates = function(){
+	this.fill_inputs = function(){
 		$('#hotspots .hotspot').each(function(){
 			var hotspot = self.hotspots.find($(this).attr('id'));
 			$(this).find('.hotspot_coordinates').val(hotspot.geometry.export());
+			$(this).find('.hotspot_types').val(hotspot.geometry.type);
 		});
 	};
 
@@ -104,10 +103,12 @@ function ChamiloHotspotAdmin() {
 		}
 	});
 	
-	$('form').submit(function(){self.fill_coordinates();});
+	$('form').submit(function(){
+		self.fill_inputs();
+	});
 
-	$('.add_hotspot').click(function(){self.add_hotspot('','','10')});
-	$('.clear_hotspot').click(function(){self.clear_current_hotspot()});
-	$('.choose_geometry').click(function(){self.change_geometry()});
+	$('.add_hotspot').click(function(){self.add_hotspot('','','10');});
+	$('.clear_hotspot').click(function(){self.clear_current_hotspot();});
+	$('.choose_geometry').change(function(){self.change_geometry($(this).val());});
 	
 }
