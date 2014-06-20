@@ -75,7 +75,7 @@ function ChamiloPolygon(paper, color, coordinates){
 			if(!points_to_draw[i])
 				continue;
 			var point_coords = points_to_draw[i].split(';');
-			this.addPoint(point_coords[0], point_coords[1]);
+			this.addPoint(parseInt(point_coords[0]), parseInt(point_coords[1]));
 		}
 		this.draw();
 	}

@@ -54,7 +54,7 @@ function ChamiloEllipse(paper, color, coordinates){
 		if(coords_elements.length >= 3)
 		{
 			var first_point_coords = coords_elements[0].split(';');
-			this.addPoint(first_point_coords[0], first_point_coords[1]);
+			this.addPoint(parseInt(first_point_coords[0]), parseInt(first_point_coords[1]));
 			this.addPoint(parseInt(first_point_coords[0]) + parseInt(coords_elements[1]), parseInt(first_point_coords[1]) + parseInt(coords_elements[2]));
 			this.draw();
 		}
