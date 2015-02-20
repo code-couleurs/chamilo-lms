@@ -136,15 +136,15 @@ else { // form has not been submitted, get answers in db
 ?>
 
 <!-- TODO minimize it -->
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH) ?>raphael-min.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/common.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/geometry.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/polygon.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/ellipse.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/rectangle.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/hotspot.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/objects/hotspotcollection.js"></script>
-<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_JS_PATH)?>hotspot/admin.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH) ?>javascript/raphael-min.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/common.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/geometry.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/polygon.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/ellipse.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/rectangle.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/hotspot.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/objects/hotspotcollection.js"></script>
+<script type="text/javascript" src="<?php echo api_get_path(WEB_LIBRARY_PATH)?>javascript/hotspot/admin.js"></script>
 
 <!-- Temporary drafts styles for dev -->
 <style>
