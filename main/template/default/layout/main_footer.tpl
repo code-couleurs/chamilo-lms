@@ -1,5 +1,5 @@
 {% if show_footer == true %}
-    {% include template ~ "/layout/footer.tpl" %}
+    {% include "layout/footer.tpl" %}
 {% endif %}
 
     {# Global modal, load content by AJAX call to href attribute on anchor tag with 'ajax' class #}

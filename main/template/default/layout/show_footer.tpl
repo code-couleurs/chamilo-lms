@@ -23,4 +23,4 @@
 
 {% endif %}
 
-{% include template ~ "/layout/main_footer.tpl" %}
+{% include "layout/main_footer.tpl" %}
