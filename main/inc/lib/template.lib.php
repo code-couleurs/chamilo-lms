@@ -67,10 +67,12 @@ class Template
         $this->hide_global_chat = $hide_global_chat;
         $this->load_plugins = $load_plugins;
 
+        // the last folder where it's searched is the template folder "default", so that we can override a template in folder "overrides"
         $template_paths = array(
             api_get_path(SYS_CODE_PATH).'template/overrides', // user defined templates
             api_get_path(SYS_CODE_PATH).'template', //template folder
-            api_get_path(SYS_PLUGIN_PATH) // plugin folder
+            api_get_path(SYS_PLUGIN_PATH), // plugin folder
+            api_get_path(SYS_CODE_PATH).'template/'.$this->templateFolder,
         );
 
         $cache_folder = api_get_path(SYS_ARCHIVE_PATH).'twig';
@@ -392,13 +394,14 @@ class Template
     }
 
     /**
+     * @deprecated since version 1.10.1
      * @param string $name
      *
      * @return string
      */
     public function get_template($name)
     {
-        return $this->templateFolder.'/'.$name;
+        return $name;
     }
 
     /**

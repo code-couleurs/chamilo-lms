@@ -1,4 +1,4 @@
-{% include template ~ "/layout/main_header.tpl" %}
+{% include "layout/main_header.tpl" %}
 {#
     show_header and show_footer templates are only called when using the
     Display::display_header and Display::display_footer
@@ -12,6 +12,6 @@
         </div>
     {% endif %}
     <div class="col-md-12">
-        {% include template ~ "/layout/page_body.tpl" %}
+        {% include "layout/page_body.tpl" %}
         <section id="main_content">
 {% endif %}

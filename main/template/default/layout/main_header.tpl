@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--><html lang="{{ document_language }}" class="no-js"> <!--<![endif]-->
 <head>
 {% block head %}
-{% include template ~ "/layout/head.tpl" %}
+{% include "layout/head.tpl" %}
 {% endblock %}
 </head>
 <body dir="{{ text_direction }}" class="{{ section_name }} {{ login_class }}">
@@ -48,7 +48,7 @@
 
     {# topbar #}
     {% block topbar %}
-        {% include template ~ "/layout/topbar.tpl" %}
+        {% include "layout/topbar.tpl" %}
         {% if show_toolbar == 1 %}
             <div class="clear-header"></div>
         {% endif %}
@@ -103,7 +103,7 @@
             <section id="menu-bar">
                 {# menu #}
                 {% block menu %}
-                {% include template ~ "/layout/menu.tpl" %}
+                {% include "layout/menu.tpl" %}
                 {% endblock %}
             </section>
             <section id="breadcrumb-bar">
@@ -118,5 +118,5 @@
     <div id="top_main_content" class="container">
     <div class="row">
     {# course navigation links/shortcuts need to be activated by the admin #}
-    {% include template ~ "/layout/course_navigation.tpl" %}
+    {% include "layout/course_navigation.tpl" %}
 {% endif %}
